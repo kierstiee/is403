@@ -1,0 +1,134 @@
+using System; // Hey guys! If you see anything that needs changing, let me know!
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ActualMenus
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string instring;
+            string input;
+            int pick_one;
+            Queue<string> inputs = new Queue<string>();
+            do // Do-while loop until the user enters 7 to go back to the main menu
+            {
+                Console.WriteLine("1. Add one time to Queue." +
+                    "\n2. Add Huge List of Items to Queue." +
+                    "\n3. Display Queue. \n4. Delete from Queue. " +
+                    "\n5. Clear Queue. \n6. Search Queue. \n7. Return to Main Menu.");//Queue menu
+
+                input = Console.ReadLine();
+                if (!Int32.TryParse(input, out pick_one))//Make sure it's an integer
+                {
+                    Console.WriteLine("Sorry, that isn't an option. Please try again.");
+                    input = "blank";
+                }
+                else
+                {
+                    if (pick_one > 7)//These make sure the entered number is within the range.
+                    {
+                        Console.WriteLine("Sorry, that isn't an option. Please try again.");
+                    }
+                    else if (pick_one < 1)
+                    {
+                        Console.WriteLine("Sorry, that isn't an option. Please try again.");
+                    }
+                    else
+                    {
+                        switch (pick_one) // Switch case to check options 1-6
+                        {
+                            case 1:
+                                Console.WriteLine("Please enter a string to put into the queue.");
+                                instring = Console.ReadLine();
+                                inputs.Enqueue(instring);
+                                break;
+
+                            case 2:
+                                inputs.Clear();
+                                int iCount = 2000;
+                                for (int iNum = 1; iNum <= iCount; iNum++)
+                                {
+                                    inputs.Enqueue("New Entry " + iNum);
+                                }
+                                break;
+
+                            case 3:
+                                foreach (string stuff in inputs)
+                                {
+                                    Console.WriteLine(stuff);
+                                }
+                                break;
+
+                            case 4:
+                                Console.WriteLine("Which item do you want to delete from the queue?");
+                                string deleteString = Console.ReadLine();
+
+                                if (!inputs.Contains(deleteString))
+                                {
+                                    Console.WriteLine("Sorry, that isn't in the queue. Please try again.");
+                                }
+                                else
+                                {
+                                    List<string> copylist = new List<string>();
+                                    foreach (string instance in inputs)
+                                    {
+                                        copylist.Add(instance);
+                                    }
+                                    copylist.Remove(deleteString);
+                                    inputs.Clear();
+                                    foreach (string instance in copylist)
+                                    {
+                                        inputs.Enqueue(instance);
+                                    }
+                                }
+                                break;
+
+                            case 5:
+                                inputs.Clear();
+                                break;
+
+                            case 6:
+                                Console.WriteLine("Which item do you want to find in the queue?");
+                                string searchString = Console.ReadLine();
+                                Stopwatch stopwatch = new Stopwatch();
+                                stopwatch.Start();
+                                if (!inputs.Contains(searchString))
+                                {
+                                    stopwatch.Stop();
+                                    TimeSpan timeSpan = stopwatch.Elapsed;
+                                    Console.WriteLine("Sorry, that isn't in the queue. Please try again.");
+                                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                                    timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds,
+                                    timeSpan.Milliseconds / 10);
+                                    Console.WriteLine("RunTime " + elapsedTime);
+                                }
+                                else
+                                {
+                                    List<string> copylist = new List<string>();
+                                    foreach (string instance in inputs)
+                                    {
+                                        copylist.Add(instance);
+                                    }
+                                    int index = copylist.IndexOf(searchString);
+                                    stopwatch.Stop();
+                                    TimeSpan timeSpan = stopwatch.Elapsed;
+                                    Console.WriteLine("This item is number " + (index + 1) + " in the queue.");
+                                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                                    timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds,
+                                    timeSpan.Milliseconds / 10);
+                                    Console.WriteLine("RunTime " + elapsedTime);
+                                }
+                                break;
+                        }
+                    }
+                }
+            } while (pick_one != 7);
+            Console.ReadKey();
+        }
+    }
+}
